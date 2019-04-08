@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Wrapping Demo</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <textarea id="textwrap-doc"></textarea>
+    <pre class="output"></pre>
+    <script type="text/javascript">
+        var wrapLength = 13;
+        var pre = document.getElementsByClassName('output')[0];
+
+        function textWrap(doc, length) {
+            return doc.split(' ').reduce(function (memo, word) {
+                var idx;
+
+                if (memo.length === 0) {
+                    idx = 0;
+                } else {
+                    idx = memo.length - 1;
+                }
+
+                var line = memo[idx];
+
+                if (line == null) {
+                    //Do not have anything yet so make it the word
+                    memo[idx] = word;
+                } else if (line.length + word.length + 1 <= length) {
+                    //Add the word to an existing line when length is fine
+                    memo[idx] += ' ' + word;
+                } else {
+                    //Move on to the next line
+                    memo[idx + 1] = word;
+                }
+                return memo;
+            }, []).join('\n');
+        }
+
+        document.getElementById('textwrap-doc').addEventListener('input', function () {
+            pre.innerHTML = textWrap(event.target.value, wrapLength);
+        });
+    </script>
+</body>
+</html>
